@@ -43,8 +43,8 @@ func initFilters() {
 		ipFilterSet = true
 		stringIDs := strings.Split(*filterIPsv4, ",")
 		validIPTrieV4.Insert(true, stringIDs)
-		outputStr := validIPTrieV4
-		log.Printf("Filter flows for IPs v4: %v\n", outputStr)
+		// validIPTrieV4.Print("", true)
+		log.Printf("Filter flows for IPs v4: %s\n", *filterIPsv4)
 	} else {
 		log.Printf("No IP v4 filter enabled.\n")
 	}
@@ -54,8 +54,7 @@ func initFilters() {
 		ipFilterSet = true
 		stringIDs := strings.Split(*filterIPsv6, ",")
 		validIPTrieV6.Insert(true, stringIDs)
-		outputStr := validIPTrieV6
-		log.Printf("Filter flows for IPs v6: %v\n", outputStr)
+		log.Printf("Filter flows for IPs v6: %s\n", *filterIPsv6)
 	} else {
 		log.Printf("No IP v6 filter enabled.\n")
 	}
@@ -99,7 +98,8 @@ func isValidCustomerID(cid int) bool {
 }
 
 func isValidIP(IP []byte) bool {
-	ipAddr := net.IP(IP)
+	ipAddrStr := net.IP(IP).String() + "/32"
+	ipAddr, _, _ := net.ParseCIDR(ipAddrStr)
 	foundIP := false
 	if ipAddr.To4() == nil {
 		foundIP, _ = validIPTrieV6.Lookup(ipAddr).(bool)
