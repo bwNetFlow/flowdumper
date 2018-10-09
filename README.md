@@ -44,7 +44,7 @@ Example: `dumper [... connection options ...] --filter.customerid 10109 --filter
 Use with `docker run`
 
 ```
-docker run -ti \
+docker run \
     -e KAFKA_BROKERS="BELWUE_KAFKA_CLUSTER" \
     -e KAFKA_TOPIC="flow-messages-enriched-YOURCID" \
     -e KAFKA_CONSUMER_GROUP="YOURCID-DUMPER" \
