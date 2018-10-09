@@ -98,7 +98,17 @@ func isValidCustomerID(cid int) bool {
 }
 
 func isValidIP(IP []byte) bool {
-	ipAddrStr := net.IP(IP).String() + "/32"
+	// TODO improve the following workarounds ...
+	test := net.IP(IP)
+	var prefix string
+	if test.To4() == nil {
+		// ipv6
+		prefix = "64"
+	} else {
+		// ipv4
+		prefix = "32"
+	}
+	ipAddrStr := net.IP(IP).String() + "/" + prefix
 	ipAddr, _, _ := net.ParseCIDR(ipAddrStr)
 	foundIP := false
 	if ipAddr.To4() == nil {
