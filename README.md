@@ -39,24 +39,20 @@ Example: `dumper [... connection options ...] --filter.customerid 10109 --filter
 {"ipVersion":4,"srcIP":"134.60.30.XX","dstIP":"172.217.22.195","srcPort":54045,"dstPort":443,"proto":6,"peer":"ECIX","bytes":5952,"packets":64}
 ```
 
-## Use Docker Image
+## Usage with Docker Image
 
 Use with `docker run`
 
 ```
-KAFKA_BROKERS="127.0.0.1:9092,[::1]:9092"
-KAFKA_TOPIC="flow-messages-enriched"
-KAFKA_CONSUMER_GROUP=""
-KAFKA_USER=""
-KAFKA_PASS=""
-FILTER_CUSTOMERIDS=""
-FILTER_IPSV4=""
-FILTER_IPSV6=""
-FILTER_PEERS=""
-```
-
-Example with `docker-compose.yml`:
-
-```
-tbd
+docker run -ti \
+    -e KAFKA_BROKERS="BELWUE_KAFKA_CLUSTER" \
+    -e KAFKA_TOPIC="flow-messages-enriched-YOURCID" \
+    -e KAFKA_CONSUMER_GROUP="YOURCID-DUMPER" \
+    -e KAFKA_USER="YOUR_USERNAME" \
+    -e KAFKA_PASS="" \
+    -e FILTER_CUSTOMERIDS="" \
+    -e FILTER_IPSV4="134.60.0.0/16" \
+    -e FILTER_IPSV6="" \
+    -e FILTER_PEERS="DFN Stuttgart,DFN Karlsruhe" \
+    omi-registry.e-technik.uni-ulm.de/bwnetflow/kafka/consumer_dumper:latest
 ```
