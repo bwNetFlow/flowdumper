@@ -1,17 +1,20 @@
 #!/bin/bash
 
 function main(){
-  echo "Start dumper with kafka.brokers $KAFKA_BROKERS, kafka.topic $KAFKA_TOPIC, kafka.consumer_group $KAFKA_CONSUMER_GROUP, kafka.user $KAFKA_USER"
+  echo "Start dumper with kafka.brokers $KAFKA_BROKERS, kafka.topic $KAFKA_TOPIC, kafka.consumer_group $KAFKA_CONSUMER_GROUP, kafka.user $KAFKA_USER, kafka.auth $KAFKA_AUTH, kafka.tls $KAFKA_TLS"
 
   /dumper --kafka.brokers "$KAFKA_BROKERS" \
     --kafka.topic "$KAFKA_TOPIC" \
     --kafka.consumer_group "$KAFKA_CONSUMER_GROUP" \
+    --kafka.auth="$KAFKA_AUTH" \
+    --kafka.tls="$KAFKA_TLS" \
     --kafka.user "$KAFKA_USER" \
     --kafka.pass "$KAFKA_PASS" \
     --filter.customerid "$FILTER_CUSTOMERIDS" \
     --filter.IPsv4 "$FILTER_IPSV4" \
     --filter.IPsv6 "$FILTER_IPSV6" \
     --filter.peers "$FILTER_PEERS"  
+
 }
 
 if [[ "$1" == "" ]]; then
