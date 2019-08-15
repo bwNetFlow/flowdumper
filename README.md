@@ -15,6 +15,10 @@ This bwNetFlow Kafka Consumer reads flows from a Kafka Topic, applies filters an
     Kafka topic to consume from (default "flow-messages-enriched")
 -kafka.user string
     Kafka username to authenticate with
+-kafka.auth bool
+    Disable/Enable authentication to kafka (default true/enabled)
+-kafka.tls bool
+    Disable/Enable tls encryption to kafka (default true/enabled)
 ```
 
 ## Filters
@@ -46,6 +50,8 @@ Use with `docker run`
 ```
 docker run \
     -e KAFKA_BROKERS="BELWUE_KAFKA_CLUSTER" \
+    -e KAFKA_AUTH="true" \
+    -e KAFKA_TLS="true" \
     -e KAFKA_TOPIC="flow-messages-enriched-YOURCID" \
     -e KAFKA_CONSUMER_GROUP="YOURCID-DUMPER" \
     -e KAFKA_USER="YOUR_USERNAME" \
@@ -55,4 +61,25 @@ docker run \
     -e FILTER_IPSV6="" \
     -e FILTER_PEERS="DFN Stuttgart,DFN Karlsruhe" \
     omi-registry.e-technik.uni-ulm.de/bwnetflow/kafka/consumer_dumper:latest
+```
+
+via docker-compose
+
+```
+version: '2'
+services:
+  kafka:
+    image: omi-registry.e-technik.uni-ulm.de/bwnetflow/kafka/consumer_dumper:latest
+    environment:
+        KAFKA_BROKERS: ...
+        KAFKA_AUTH: false
+        KAFKA_TLS: false
+        KAFKA_TOPIC: enriched_goflow_topic
+        KAFKA_CONSUMER_GROUP: myconsumer
+        FILTER_CUSTOMERIDS: 
+        FILTER_IPSV4: 
+        FILTER_IPSV6: 
+        FILTER_PEERS: 
+        
+
 ```
