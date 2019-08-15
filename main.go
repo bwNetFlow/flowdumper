@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,8 +17,11 @@ var (
 	kafkaBroker        = flag.String("kafka.brokers", "127.0.0.1:9092,[::1]:9092", "Kafka brokers separated by commas")
 	kafkaInTopic       = flag.String("kafka.topic", "flow-messages-enriched", "Kafka topic to consume from")
 	kafkaConsumerGroup = flag.String("kafka.consumer_group", "dashboard", "Kafka Consumer Group")
-	kafkaUser          = flag.String("kafka.user", "", "Kafka username to authenticate with")
-	kafkaPass          = flag.String("kafka.pass", "", "Kafka password to authenticate with")
+
+	kafkaUser = flag.String("kafka.user", "", "Kafka username to authenticate with")
+	kafkaPass = flag.String("kafka.pass", "", "Kafka password to authenticate with")
+	kafkaAuth = flag.Bool("kafka.auth", true, "Kafka auth enable/disable")
+	kafkaTLS  = flag.Bool("kafka.tls", true, "Kafka tls connection enable/disable")
 
 	// filtering
 	filterCustomerIDs = flag.String("filter.customerid", "", "If defined, only flows for this customer are considered. Leave empty to disable filter. Provide comma separated list to filter for multiple customers.")
@@ -41,10 +45,22 @@ func main() {
 	}()
 
 	// Set kafka auth
-	if *kafkaUser != "" {
-		kafkaConn.SetAuth(*kafkaUser, *kafkaPass)
+	fmt.Printf("auth: %+v\n", *kafkaAuth)
+	fmt.Printf("tls: %+v\n", *kafkaTLS)
+	if *kafkaAuth {
+		if *kafkaUser != "" {
+			kafkaConn.SetAuth(*kafkaUser, *kafkaPass)
+		} else {
+			kafkaConn.SetAuthAnon()
+		}
 	} else {
-		kafkaConn.SetAuthAnon()
+		kafkaConn.DisableAuth()
+	}
+
+	if *kafkaTLS {
+		// enabled by default
+	} else {
+		kafkaConn.DisableTLS()
 	}
 
 	// Establish Kafka Connection
