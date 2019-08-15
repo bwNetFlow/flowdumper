@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	kafka "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/kafka/kafkaconnector"
+	kafka "github.com/bwNetFlow/kafkaconnector"
 
 	"github.com/Shopify/sarama"
 )

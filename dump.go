@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"net"
 
-	flow "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/bwnetflow_api/go"
+	flow "github.com/bwNetFlow/protobuf/go"
+	"github.com/bwNetFlow/protobuf_helpers/go"
 )
 
 // JSONFlowMessage describes a JSON representation of a single flow
 type JSONFlowMessage struct {
-	IPVersion int32  `json:"ipVersion"`
+	IPVersion string `json:"ipVersion"`
 	SrcIP     string `json:"srcIP,omitempty"`
 	DstIP     string `json:"dstIP,omitempty"`
 	SrcPort   uint32 `json:"srcPort"`
@@ -23,15 +24,17 @@ type JSONFlowMessage struct {
 
 func dumpFlow(flow *flow.FlowMessage) {
 
+	flowh := protobuf_helpers.NewFlowHelper(flow)
+
 	// translate message to JSONFlowMessage
 	jsonMsg := JSONFlowMessage{
-		IPVersion: int32(flow.GetIPversion()),
-		SrcIP:     net.IP(flow.GetSrcIP()).String(),
-		DstIP:     net.IP(flow.GetDstIP()).String(),
+		IPVersion: flowh.IPVersionString(),
+		SrcIP:     fmt.Sprintf("%v", net.IP(flow.GetSrcAddr())),
+		DstIP:     fmt.Sprintf("%v", net.IP(flow.GetDstAddr())),
 		SrcPort:   flow.GetSrcPort(),
 		DstPort:   flow.GetDstPort(),
 		Proto:     flow.GetProto(),
-		Peer:      flow.GetPeer(),
+		Peer:      flowh.Peer(),
 		Bytes:     flow.GetBytes(),
 		Packets:   flow.GetPackets(),
 	}

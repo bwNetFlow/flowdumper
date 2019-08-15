@@ -4,7 +4,7 @@ import (
 	"log"
 	"runtime/debug"
 
-	flow "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/bwnetflow_api/go"
+	flow "github.com/bwNetFlow/protobuf/go"
 )
 
 func runKafkaListener() {

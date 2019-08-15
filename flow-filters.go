@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	flow "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/bwnetflow_api/go"
-	"omi-gitlab.e-technik.uni-ulm.de/bwnetflow/ip_prefix_trie"
+	"github.com/bwNetFlow/ip_prefix_trie"
+	flow "github.com/bwNetFlow/protobuf/go"
+	protobuf_helpers "github.com/bwNetFlow/protobuf_helpers/go"
 )
 
 var validCustomerIDs []int
@@ -79,9 +80,10 @@ func filterApplies(flow *flow.FlowMessage) bool {
 	// customerID filter
 	if len(validCustomerIDs) == 0 || isValidCustomerID(int(flow.GetCid())) {
 		// IP subnet filter
-		if !ipFilterSet || isValidIP(flow.GetSrcIP()) || isValidIP(flow.GetDstIP()) {
+		if !ipFilterSet || isValidIP(flow.GetSrcAddr()) || isValidIP(flow.GetDstAddr()) {
 			// peer filter
-			if len(validPeers) == 0 || isValidPeer(flow.GetPeer()) {
+			flowh := protobuf_helpers.NewFlowHelper(flow)
+			if len(validPeers) == 0 || isValidPeer(flowh.Peer()) {
 				return true
 			}
 		}
